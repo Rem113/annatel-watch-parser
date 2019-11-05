@@ -3,11 +3,16 @@ export const parse = str => {
   const header = parseHeader(arr[0]);
 
   // Parse body
-  let body = arr.slice(1, arr.length - 1);
+  let body = arr.slice(1, arr.length);
+
+  console.log(body);
 
   switch (header.actionType) {
     case "UD":
       body = parseUpdateBody(body);
+      break;
+    default:
+      body = { error: "Action type unsupported" };
       break;
   }
 
@@ -41,7 +46,7 @@ const _parseDateTime = (date, time) =>
     parseInt(time.substr(4, 2))
   );
 
-// Str format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
+// Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
 export const parseUpdateBody = body => {
   const arr = body.slice(0, 7); // We only need the location data
 

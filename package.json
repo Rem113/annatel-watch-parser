@@ -1,17 +1,22 @@
 {
   "name": "annatel-watch-parser",
-  "version": "1.0.0",
+  "version": "1.0.10",
   "description": "A simple parser for Annatel's kids watch messages.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "test": "jest"
+    "compile": "babel -d lib/ src/",
+    "test": "jest",
+    "lint": "eslint src/"
   },
   "author": "Hillel Saal & Gabriel Elbaz",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.6.4",
     "@babel/core": "^7.6.4",
     "babel-jest": "^24.9.0",
+    "babel-plugin-add-module-exports": "^1.0.2",
     "babel-preset-env": "^1.7.0",
+    "eslint": "^6.6.0",
     "jest": "^24.9.0"
   }
 }
