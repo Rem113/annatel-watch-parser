@@ -1,6 +1,6 @@
 {
   "name": "annatel-watch-parser",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A simple parser for Annatel's kids watch messages.",
   "main": "lib/index.js",
   "scripts": {

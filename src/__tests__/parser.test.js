@@ -16,5 +16,6 @@ describe("parse", () => {
     };
 
     expect(parse(packet1)).toEqual(expected);
+    expect(1).toBe(1);
   });
 });

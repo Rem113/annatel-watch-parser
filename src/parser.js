@@ -5,8 +5,6 @@ export const parse = str => {
   // Parse body
   let body = arr.slice(1, arr.length);
 
-  console.log(body);
-
   switch (header.actionType) {
     case "UD":
       body = parseUpdateBody(body);
