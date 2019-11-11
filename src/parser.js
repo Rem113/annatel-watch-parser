@@ -16,6 +16,7 @@ export const parse = str => {
       break;
   }
 
+  // Fonction de retour
   return {
     ...header,
     ...body
