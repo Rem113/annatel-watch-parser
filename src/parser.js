@@ -107,7 +107,7 @@ export const parseHeader = header => {
   return {
     vendor: arr[0],
     id: arr[1],
-    length: parseInt(arr[2]),
+    length: parseInt(arr[2], 16),
     actionType: arr[3]
   };
 };
@@ -181,7 +181,7 @@ export const parseWAD = body => {
 };
 
 export const parseWG = body => {
-  const locationData = parseLocationData(body.slice(1, body.length));
+  const locationData = parseLocationData(body);
 
   return {
     ...locationData
