@@ -125,8 +125,7 @@ const _parseDateTime = (date, time) =>
   );
 
 export const parseLK = body => {
-  console.log(body.length);
-  if (body.length === 0) return;
+  if (body.length === 0) return {};
   else {
     const steps = parseInt(body[0]);
     const rollingTime = parseInt(body[1]);
