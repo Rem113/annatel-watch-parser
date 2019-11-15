@@ -5,98 +5,71 @@ export const parse = str => {
 
   // Parse body
   let body = arr.slice(1, arr.length);
+  let payload = {};
 
   switch (header.actionType) {
     // **** 1. TERMINAL COMMANDS ***** //
     case "LK":
-      body = parseLK(body);
+      payload = parseLK(body);
       break;
     case "UD":
-      body = parseUD(body);
+      payload = parseUD(body);
       break;
     case "UD2":
-      body = parseUD2(body);
+      payload = parseUD2(body);
       break;
     case "AL":
-      body = parseAL(body);
+      payload = parseAL(body);
       break;
     case "UPLOAD":
-      body = parseUPLOAD(body);
+      payload = parseUPLOAD(body);
       break;
     case "MONITOR":
-      body = {}; // Any body to parse
+      payload = {}; // Any body to parse
       break;
     case "WAD":
-      body = parseWAD(body);
+      payload = parseWAD(body);
       break;
     case "WG":
-      body = parseWG(body);
+      payload = parseWG(body);
       break;
     // **** 2. SEND COMMANDS ON PLATFORM ***** //
     case "CENTER":
-      body = parseCENTER(body);
+      payload = parseCENTER(body);
       break;
     case "SLAVE":
-      body = parseSLAVE(body);
+      payload = parseSLAVE(body);
       break;
     case "PW":
-      body = parsePW(body);
+      payload = parsePW(body);
       break;
     case "CALL":
-      body = parseCALL(body);
+      payload = parseCALL(body);
       break;
     case "SMS":
-      body = parseSMS(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
+      payload = parseSMS(body);
       break;
     case "UPGRADE":
-      body = parseUPGRADE(body);
+      payload = parseUPGRADE(body);
       break;
     case "IP":
-      body = parseIP(body);
+      payload = parseIP(body);
       break;
     case "FACTORY":
-      body = {}; // Any body to parse
+      // Nothing to parse
       break;
     case "LZ":
-      body = parseLZ(body);
+      payload = parseLZ(body);
       break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-    case "*****************":
-      body = parseWG(body);
-      break;
-
     default:
-      body = { error: "Action type unsupported" };
+      payload = { error: "Action type unsupported" };
       break;
   }
 
   // Return function
   return {
     ...header,
-    ...body
+    payload
   };
 };
 

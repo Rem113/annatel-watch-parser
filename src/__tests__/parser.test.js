@@ -21,7 +21,8 @@ describe("parse packets", () => {
       vendor: "SG",
       id: "8800000015",
       length: parseInt("2", 16),
-      actionType: "LK"
+      actionType: "LK",
+      payload: {}
     };
 
     const expectedLKE = {
@@ -29,9 +30,7 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("000d", 16),
       actionType: "LK",
-      steps: 50,
-      rollingTime: 100,
-      batteryAmount: 100
+      payload: { steps: 50, rollingTime: 100, batteryAmount: 100 }
     };
 
     const expectedUD = {
@@ -39,9 +38,11 @@ describe("parse packets", () => {
       id: "5305994463",
       length: parseInt("178", 16),
       actionType: "UD",
-      date: new Date("11/01/2019 10:34:06"), // mm/dd/yyyy hh:mm:ss
-      latitude: 31.766222,
-      longitude: 35.190035
+      payload: {
+        date: new Date("11/01/2019 10:34:06"), // mm/dd/yyyy hh:mm:ss
+        latitude: 31.766222,
+        longitude: 35.190035
+      }
     };
 
     const expectedUD2 = {
@@ -49,9 +50,11 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("88", 16),
       actionType: "UD2",
-      date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
-      latitude: 22.571707,
-      longitude: 113.8613968
+      payload: {
+        date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
+        latitude: 22.571707,
+        longitude: 113.8613968
+      }
     };
 
     const expectedAL = {
@@ -59,9 +62,11 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("87", 16),
       actionType: "AL",
-      date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
-      latitude: 22.571707,
-      longitude: 113.8613968
+      payload: {
+        date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
+        latitude: 22.571707,
+        longitude: 113.8613968
+      }
     };
 
     const expectedUPLOAD = {
@@ -69,14 +74,15 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("9", 16),
       actionType: "UPLOAD",
-      interval: 10
+      payload: { interval: 10 }
     };
 
     const expectedMONITOR = {
       vendor: "SG",
       id: "8800000015",
       length: parseInt("7", 16),
-      actionType: "MONITOR"
+      actionType: "MONITOR",
+      payload: {}
     };
 
     const expectedWAD = {
@@ -84,10 +90,12 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("8B", 16),
       actionType: "WAD",
-      language: "CH",
-      date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
-      latitude: 22.571707,
-      longitude: 113.8613968
+      payload: {
+        language: "CH",
+        date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
+        latitude: 22.571707,
+        longitude: 113.8613968
+      }
     };
 
     ("[SG*8800000015*0087*WG,220414,134652,A,22.571707,N,113.8613968,E,0.1,0.0,100,7,60,90,1000,50,0001,4,1,460,0,9360,4082,131,9360,4092,148,9360,4091,143,9360,4153,141]");
@@ -96,9 +104,11 @@ describe("parse packets", () => {
       id: "8800000015",
       length: parseInt("87", 16),
       actionType: "WG",
-      date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
-      latitude: 22.571707,
-      longitude: 113.8613968
+      payload: {
+        date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
+        latitude: 22.571707,
+        longitude: 113.8613968
+      }
     };
 
     expect(parse(packetLK)).toEqual(expectedLK);
