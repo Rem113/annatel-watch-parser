@@ -1,4 +1,4 @@
-import parse from "../index";
+import { stringToObject, objectToString } from "../index";
 
 const packetLK = "[SG*8800000015*0002*LK]";
 const packetLKE = "[SG*8800000015*000D*LK,50,100,100]";
@@ -111,15 +111,15 @@ describe("parse packets", () => {
       }
     };
 
-    expect(parse(packetLK)).toEqual(expectedLK);
-    expect(parse(packetLKE)).toEqual(expectedLKE);
-    expect(parse(packetUD)).toEqual(expectedUD);
-    expect(parse(packetUD2)).toEqual(expectedUD2);
-    expect(parse(packetAL)).toEqual(expectedAL);
-    expect(parse(packetUPLOAD)).toEqual(expectedUPLOAD);
-    expect(parse(packetMONITOR)).toEqual(expectedMONITOR);
-    expect(parse(packetWAD)).toEqual(expectedWAD);
-    expect(parse(packetWG)).toEqual(expectedWG);
+    expect(stringToObject(packetLK)).toEqual(expectedLK);
+    expect(stringToObject(packetLKE)).toEqual(expectedLKE);
+    expect(stringToObject(packetUD)).toEqual(expectedUD);
+    expect(stringToObject(packetUD2)).toEqual(expectedUD2);
+    expect(stringToObject(packetAL)).toEqual(expectedAL);
+    expect(stringToObject(packetUPLOAD)).toEqual(expectedUPLOAD);
+    expect(stringToObject(packetMONITOR)).toEqual(expectedMONITOR);
+    expect(stringToObject(packetWAD)).toEqual(expectedWAD);
+    expect(stringToObject(packetWG)).toEqual(expectedWG);
   });
 });
 
