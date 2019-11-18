@@ -79,7 +79,7 @@ export const parseHeader = header => {
 
   return {
     vendor: arr[0],
-    id: arr[1],
+    watchId: arr[1],
     length: parseInt(arr[2], 16),
     actionType: arr[3]
   };
