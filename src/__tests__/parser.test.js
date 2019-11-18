@@ -19,7 +19,7 @@ describe("parse packets", () => {
   it("should parse update packets correctly", () => {
     const expectedLK = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("2", 16),
       actionType: "LK",
       payload: {}
@@ -27,7 +27,7 @@ describe("parse packets", () => {
 
     const expectedLKE = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("000d", 16),
       actionType: "LK",
       payload: { steps: 50, rollingTime: 100, batteryAmount: 100 }
@@ -35,7 +35,7 @@ describe("parse packets", () => {
 
     const expectedUD = {
       vendor: "SG",
-      id: "5305994463",
+      watchId: "5305994463",
       length: parseInt("178", 16),
       actionType: "UD",
       payload: {
@@ -47,7 +47,7 @@ describe("parse packets", () => {
 
     const expectedUD2 = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("88", 16),
       actionType: "UD2",
       payload: {
@@ -59,7 +59,7 @@ describe("parse packets", () => {
 
     const expectedAL = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("87", 16),
       actionType: "AL",
       payload: {
@@ -71,7 +71,7 @@ describe("parse packets", () => {
 
     const expectedUPLOAD = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("9", 16),
       actionType: "UPLOAD",
       payload: { interval: 10 }
@@ -79,7 +79,7 @@ describe("parse packets", () => {
 
     const expectedMONITOR = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("7", 16),
       actionType: "MONITOR",
       payload: {}
@@ -87,7 +87,7 @@ describe("parse packets", () => {
 
     const expectedWAD = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("8B", 16),
       actionType: "WAD",
       payload: {
@@ -101,7 +101,7 @@ describe("parse packets", () => {
     ("[SG*8800000015*0087*WG,220414,134652,A,22.571707,N,113.8613968,E,0.1,0.0,100,7,60,90,1000,50,0001,4,1,460,0,9360,4082,131,9360,4092,148,9360,4091,143,9360,4153,141]");
     const expectedWG = {
       vendor: "SG",
-      id: "8800000015",
+      watchId: "8800000015",
       length: parseInt("87", 16),
       actionType: "WG",
       payload: {
