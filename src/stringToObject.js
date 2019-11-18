@@ -1,4 +1,4 @@
-export const parse = str => {
+export default str => {
   // Parse header
   const arr = str.substr(1, str.length - 2).split(","); // Get rid of leading and trailing angle brackets
   const header = parseHeader(arr[0]);
@@ -33,34 +33,6 @@ export const parse = str => {
     case "WG":
       payload = parseWG(body);
       break;
-    // **** 2. SEND COMMANDS ON PLATFORM ***** //
-    case "CENTER":
-      payload = parseCENTER(body);
-      break;
-    case "SLAVE":
-      payload = parseSLAVE(body);
-      break;
-    case "PW":
-      payload = parsePW(body);
-      break;
-    case "CALL":
-      payload = parseCALL(body);
-      break;
-    case "SMS":
-      payload = parseSMS(body);
-      break;
-    case "UPGRADE":
-      payload = parseUPGRADE(body);
-      break;
-    case "IP":
-      payload = parseIP(body);
-      break;
-    case "FACTORY":
-      // Nothing to parse
-      break;
-    case "LZ":
-      payload = parseLZ(body);
-      break;
     default:
       payload = { error: "Action type unsupported" };
       break;
@@ -74,7 +46,7 @@ export const parse = str => {
 };
 
 // Header format: vendor*id*length*action
-export const parseHeader = header => {
+const parseHeader = header => {
   const arr = header.split("*");
 
   return {
@@ -97,7 +69,7 @@ const _parseDateTime = (date, time) =>
     parseInt(time.substr(4, 2))
   );
 
-export const parseLK = body => {
+const parseLK = body => {
   if (body.length === 0) return {};
   else {
     const steps = parseInt(body[0]);
@@ -113,7 +85,7 @@ export const parseLK = body => {
 };
 
 // Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
-export const parseLocationData = body => {
+const parseLocationData = body => {
   const arr = body.slice(0, 7); // We only need the location data
 
   const date = _parseDateTime(arr[0], arr[1]);
@@ -129,20 +101,20 @@ export const parseLocationData = body => {
   };
 };
 
-export const parseUD = body => parseLocationData(body);
+const parseUD = body => parseLocationData(body);
 
-export const parseUD2 = body => parseLocationData(body);
+const parseUD2 = body => parseLocationData(body);
 
-export const parseAL = body => parseLocationData(body);
+const parseAL = body => parseLocationData(body);
 
-export const parseUPLOAD = body => {
+const parseUPLOAD = body => {
   const interval = parseInt(body[0]);
   return {
     interval
   };
 };
 
-export const parseWAD = body => {
+const parseWAD = body => {
   const language = body[0];
   const locationData = parseLocationData(body.slice(1, body.length));
 
@@ -152,7 +124,7 @@ export const parseWAD = body => {
   };
 };
 
-export const parseWG = body => {
+const parseWG = body => {
   const locationData = parseLocationData(body);
 
   return {
@@ -162,51 +134,51 @@ export const parseWG = body => {
 
 // **** 2. SEND COMMANDS ON PLATFORM ***** //
 
-export const parseCENTER = body => {
+const parseCENTER = body => {
   return {
     centerNumber: body[0]
   };
 };
 
-export const parseSLAVE = body => {
+const parseSLAVE = body => {
   return {
     assistanceNumber: body[0]
   };
 };
 
-export const parsePW = body => {
+const parsePW = body => {
   return {
     password: body[0]
   };
 };
 
-export const parseCALL = body => {
+const parseCALL = body => {
   return {
     phoneNumber: body[0]
   };
 };
 
-export const parseSMS = body => {
+const parseSMS = body => {
   return {
     phoneNumber: body[0],
     message: body[1]
   };
 };
 
-export const parseUPGRADE = body => {
+const parseUPGRADE = body => {
   return {
     URL: body[0]
   };
 };
 
-export const parseIP = body => {
+const parseIP = body => {
   return {
     IP: body[0],
     port: parseInt(body[1])
   };
 };
 
-export const parseLZ = body => {
+const parseLZ = body => {
   return {
     language: body[0],
     timeArea: body[1]

@@ -1,3 +1,7 @@
-import { parse } from "./parser";
+import stringToObject from "./stringToObject";
+import objectToString from "./objectToString";
 
-export default parse;
+export default {
+  stringToObject,
+  objectToString
+};
