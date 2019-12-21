@@ -8,7 +8,7 @@ export default str => {
   let payload = {};
 
   switch (header.actionType) {
-    // **** 1. TERMINAL COMMANDS ***** //
+    // **** 1. TERMINAL SENDS COMMANDS ***** //
     case "LK":
       payload = parseLK(body);
       break;
@@ -33,6 +33,35 @@ export default str => {
     case "WG":
       payload = parseWG(body);
       break;
+
+    case "CENTER":
+      payload = parseCENTER(body);
+      break;
+    case "SLAVE":
+      payload = parseSLAVE(body);
+      break;
+    case "PW":
+      payload = parsePW(body);
+      break;
+    case "CALL":
+      payload = parseCALL(body);
+      break;
+    case "SMS":
+      payload = parseSMS(body);
+      break;
+    case "UPGRADE":
+      payload = parseUPGRADE(body);
+      break;
+    case "IP":
+      payload = parseIP(body);
+      break;
+    case "FACTORY":
+      // Nothing to parse
+      break;
+    case "LZ":
+      payload = parseLZ(body);
+      break;
+
     default:
       payload = { error: "Action type unsupported" };
       break;
