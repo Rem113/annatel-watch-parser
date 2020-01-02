@@ -35,7 +35,6 @@ export default obj => {
     case "LZ":
       payload = parseLZ(body);
       break;
-
     case "UD":
       payload = parseUD(body);
       break;
