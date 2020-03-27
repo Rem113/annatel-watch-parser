@@ -5,57 +5,59 @@ export default obj => {
   const body = obj.payload;
   let payload;
 
-  switch (obj.actionType) {
-    case "LK":
-      payload = "";
-      break;
-    case "CENTER":
-      payload = parseCENTER(body);
-      break;
-    case "SLAVE":
-      payload = parseSLAVE(body);
-      break;
-    case "PW":
-      payload = parsePW(body);
-      break;
-    case "CALL":
-      payload = parseCALL(body);
-      break;
-    case "SMS":
-      payload = parseSMS(body);
-      break;
-    case "UPGRADE":
-      payload = parseUPGRADE(body);
-      break;
-    case "IP":
-      payload = parseIP(body);
-      break;
-    case "FACTORY":
-      break;
-    case "LZ":
-      payload = parseLZ(body);
-      break;
-    case "UD":
-      payload = parseUD(body);
-      break;
-    case "UD2":
-      payload = parseUD2(body);
-      break;
-    case "AL":
-      payload = parseAL(body);
-      break;
-    case "UPLOAD":
-      payload = parseUPLOAD(body);
-      break;
-    case "MONITOR":
-      // Nothing to parse
-      break;
-    case "WAD":
-      payload = parseWAD(body);
-      break;
-    case "WG":
-      payload = parseWG(body);
-      break;
+  if (body) {
+    switch (obj.actionType) {
+      case "LK":
+        // Nothing to parse
+        break;
+      case "CENTER":
+        payload = parseCENTER(body);
+        break;
+      case "SLAVE":
+        payload = parseSLAVE(body);
+        break;
+      case "PW":
+        payload = parsePW(body);
+        break;
+      case "CALL":
+        payload = parseCALL(body);
+        break;
+      case "SMS":
+        payload = parseSMS(body);
+        break;
+      case "UPGRADE":
+        payload = parseUPGRADE(body);
+        break;
+      case "IP":
+        payload = parseIP(body);
+        break;
+      case "FACTORY":
+        break;
+      case "LZ":
+        payload = parseLZ(body);
+        break;
+      case "UD":
+        payload = parseUD(body);
+        break;
+      case "UD2":
+        payload = parseUD2(body);
+        break;
+      case "AL":
+        payload = parseAL(body);
+        break;
+      case "UPLOAD":
+        payload = parseUPLOAD(body);
+        break;
+      case "MONITOR":
+        // Nothing to parse
+        break;
+      case "WAD":
+        payload = parseWAD(body);
+        break;
+      case "WG":
+        payload = parseWG(body);
+        break;
+    }
   }
 
   return `[${header}` + (payload ? `,${payload}]` : "]");

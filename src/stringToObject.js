@@ -7,106 +7,108 @@ export default str => {
   let body = arr.slice(1, arr.length);
   let payload = {};
 
-  switch (header.actionType) {
-    // **** 1. TERMINAL SENDS COMMANDS ***** //
-    case "LK":
-      payload = parseLK(body);
-      break;
-    case "UD":
-      payload = parseUD(body);
-      break;
-    case "UD2":
-      payload = parseUD2(body);
-      break;
-    case "AL":
-      payload = parseAL(body);
-      break;
-    case "UPLOAD":
-      payload = parseUPLOAD(body);
-      break;
-    case "MONITOR":
-      payload = {}; // Any body to parse
-      break;
-    case "WAD":
-      payload = parseWAD(body);
-      break;
-    case "WG":
-      payload = parseWG(body);
-      break;
+  if (body) {
+    switch (header.actionType) {
+      // **** 1. TERMINAL SENDS COMMANDS ***** //
+      case "LK":
+        payload = parseLK(body);
+        break;
+      case "UD":
+        payload = parseUD(body);
+        break;
+      case "UD2":
+        payload = parseUD2(body);
+        break;
+      case "AL":
+        payload = parseAL(body);
+        break;
+      case "UPLOAD":
+        payload = parseUPLOAD(body);
+        break;
+      case "MONITOR":
+        payload = {}; // Any body to parse
+        break;
+      case "WAD":
+        payload = parseWAD(body);
+        break;
+      case "WG":
+        payload = parseWG(body);
+        break;
 
-    case "CENTER":
-      payload = parseCENTER(body);
-      break;
-    case "SLAVE":
-      payload = parseSLAVE(body);
-      break;
-    case "PW":
-      payload = parsePW(body);
-      break;
-    case "CALL":
-      payload = parseCALL(body);
-      break;
-    case "SMS":
-      payload = parseSMS(body);
-      break;
-    case "UPGRADE":
-      payload = parseUPGRADE(body);
-      break;
-    case "IP":
-      payload = parseIP(body);
-      break;
-    case "FACTORY":
-      payload = {}; // Nothing to parse
-      break;
-    case "LZ":
-      payload = parseLZ(body);
-      break;
-    case "URL":
-      payload = parseURL(body);
-      break;
-    case "SOSSMS":
-      payload = parseSOSSMS(body);
-      break;
-    case "LOWBAT": // *** 15 ***
-      payload = parseLOWBAT(body);
-      break;
-    case "APN":
-      payload = parseAPN(body);
-      break;
-    case "ANY":
-      payload = parseANY(body);
-      break;
-    case "TS":
-      payload = parseTS(body);
-      break;
-    case "VERNO":
-      payload = {}; // Nothing to parse
-      break;
-    case "RESET":
-      payload = {}; // Nothing to parse
-      break;
-    case "CR":
-      payload = {}; // Nothing to parse
-      break;
-    case "BT":
-      payload = parseBT(body);
-      break;
-    case "WORK":
-      payload = parseWORK(body);
-      break;
-    case "WORKTIME":
-      payload = parseWORKTIME(body);
-      break;
-    case "REMOVE":
-      payload = parseREMOVE(body);
-      break;
-    case "PULSE":
-      payload = parsePULSE(body);
-      break;
+      case "CENTER":
+        payload = parseCENTER(body);
+        break;
+      case "SLAVE":
+        payload = parseSLAVE(body);
+        break;
+      case "PW":
+        payload = parsePW(body);
+        break;
+      case "CALL":
+        payload = parseCALL(body);
+        break;
+      case "SMS":
+        payload = parseSMS(body);
+        break;
+      case "UPGRADE":
+        payload = parseUPGRADE(body);
+        break;
+      case "IP":
+        payload = parseIP(body);
+        break;
+      case "FACTORY":
+        payload = {}; // Nothing to parse
+        break;
+      case "LZ":
+        payload = parseLZ(body);
+        break;
+      case "URL":
+        payload = parseURL(body);
+        break;
+      case "SOSSMS":
+        payload = parseSOSSMS(body);
+        break;
+      case "LOWBAT": // *** 15 ***
+        payload = parseLOWBAT(body);
+        break;
+      case "APN":
+        payload = parseAPN(body);
+        break;
+      case "ANY":
+        payload = parseANY(body);
+        break;
+      case "TS":
+        payload = parseTS(body);
+        break;
+      case "VERNO":
+        payload = {}; // Nothing to parse
+        break;
+      case "RESET":
+        payload = {}; // Nothing to parse
+        break;
+      case "CR":
+        payload = {}; // Nothing to parse
+        break;
+      case "BT":
+        payload = parseBT(body);
+        break;
+      case "WORK":
+        payload = parseWORK(body);
+        break;
+      case "WORKTIME":
+        payload = parseWORKTIME(body);
+        break;
+      case "REMOVE":
+        payload = parseREMOVE(body);
+        break;
+      case "PULSE":
+        payload = parsePULSE(body);
+        break;
 
-    default:
-      payload = { error: "Action type unsupported" };
-      break;
+      default:
+        payload = { error: "Action type unsupported" };
+        break;
+    }
   }
 
   // Return function
