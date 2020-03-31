@@ -9,9 +9,9 @@ export default str => {
 
   if (body) {
     switch (header.actionType) {
-      // **** 1. TERMINAL SENDS COMMANDS ***** //
+      // *** 1. Terminal Commands ***
       case "LK":
-        payload = parseLK(body);
+        payload = parseLK(body); // In case of filled body
         break;
       case "UD":
         payload = parseUD(body);
@@ -22,12 +22,6 @@ export default str => {
       case "AL":
         payload = parseAL(body);
         break;
-      case "UPLOAD":
-        payload = parseUPLOAD(body);
-        break;
-      case "MONITOR":
-        payload = {}; // Any body to parse
-        break;
       case "WAD":
         payload = parseWAD(body);
         break;
@@ -35,6 +29,10 @@ export default str => {
         payload = parseWG(body);
         break;
 
+      // *** 2. Server Commands ***
+      case "UPLOAD":
+        payload = parseUPLOAD(body);
+        break;
       case "CENTER":
         payload = parseCENTER(body);
         break;
@@ -50,6 +48,16 @@ export default str => {
       case "SMS":
         payload = parseSMS(body);
         break;
+      case "MONITOR":
+        // Nothing to parse
+        break;
+      case "SOS":
+      case "SOS1":
+      case "SOS2":
+      case "SOS3":
+        payload = parseSOS(body, header.actionType);
+        break;
+
       case "UPGRADE":
         payload = parseUPGRADE(body);
         break;
@@ -57,7 +65,7 @@ export default str => {
         payload = parseIP(body);
         break;
       case "FACTORY":
-        payload = {}; // Nothing to parse
+        // Nothing to parse
         break;
       case "LZ":
         payload = parseLZ(body);
@@ -68,7 +76,7 @@ export default str => {
       case "SOSSMS":
         payload = parseSOSSMS(body);
         break;
-      case "LOWBAT": // *** 15 ***
+      case "LOWBAT":
         payload = parseLOWBAT(body);
         break;
       case "APN":
@@ -78,16 +86,16 @@ export default str => {
         payload = parseANY(body);
         break;
       case "TS":
-        payload = parseTS(body);
+        // payload = parseTS(body);
         break;
       case "VERNO":
-        payload = {}; // Nothing to parse
+        // Nothing to parse
         break;
       case "RESET":
-        payload = {}; // Nothing to parse
+        // Nothing to parse
         break;
       case "CR":
-        payload = {}; // Nothing to parse
+        // Nothing to parse
         break;
       case "BT":
         payload = parseBT(body);
@@ -102,7 +110,7 @@ export default str => {
         payload = parseREMOVE(body);
         break;
       case "PULSE":
-        payload = parsePULSE(body);
+        // payload = parsePULSE(body);
         break;
 
       default:
@@ -141,21 +149,6 @@ const _parseDateTime = (date, time) =>
     parseInt(time.substr(2, 2)),
     parseInt(time.substr(4, 2))
   );
-
-const parseLK = body => {
-  if (body.length === 0) return {};
-  else {
-    const steps = parseInt(body[0]);
-    const rollingTime = parseInt(body[1]);
-    const batteryAmount = parseInt(body[2]);
-
-    return {
-      steps,
-      rollingTime,
-      batteryAmount
-    };
-  }
-};
 
 // Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
 const parseLocationData = body => {
@@ -237,18 +230,23 @@ const parseLocationData = body => {
   };
 };
 
-const parseUD = body => parseLocationData(body);
-const parseUD2 = body => parseLocationData(body);
-const parseAL = body => parseLocationData(body);
+// *** 1. Terminal Commands ***
 
-const parseUPLOAD = body => {
-  const interval = parseInt(body[0]);
+const parseLK = body => {
+  const steps = parseInt(body[0]);
+  const rollingTime = parseInt(body[1]);
+  const batteryAmount = parseInt(body[2]);
+
   return {
-    interval
+    steps,
+    rollingTime,
+    batteryAmount
   };
 };
 
-// MONITOR: Nothing to parse
+const parseUD = body => parseLocationData(body);
+const parseUD2 = body => parseLocationData(body);
+const parseAL = body => parseLocationData(body);
 
 const parseWAD = body => {
   const language = body[0];
@@ -268,7 +266,13 @@ const parseWG = body => {
   };
 };
 
-// **** 2. SEND COMMANDS ON PLATFORM ***** //
+// *** 2. Server Commands ***
+const parseUPLOAD = body => {
+  const interval = parseInt(body[0]);
+  return {
+    interval
+  };
+};
 
 const parseCENTER = body => {
   return {
@@ -301,7 +305,16 @@ const parseSMS = body => {
   };
 };
 
-// const parseSOS
+const parseSOS = (body, SOSNumber) => {
+  let result = {},
+    phoneNumber = "phoneNumber";
+
+  if (body.length == 3)
+    for (let i = 1; i < 4; ++i) result[phoneNumber + i] = body[i - 1];
+  else result[phoneNumber + SOSNumber[SOSNumber.length - 1]] = body[0];
+
+  return result;
+};
 
 const parseUPGRADE = body => {
   return {
@@ -337,7 +350,7 @@ const parseSOSSMS = body => {
 
 const parseLOWBAT = body => {
   return {
-    sendBatteryLowSMS: body[0]
+    sendBatteryLowSMSOn: body[0]
   };
 };
 
@@ -352,7 +365,7 @@ const parseAPN = body => {
 
 const parseANY = body => {
   return {
-    SMSControlAccess: body[0]
+    SMSControlAccessOn: body[0]
   };
 };
 

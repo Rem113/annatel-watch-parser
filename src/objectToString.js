@@ -7,8 +7,29 @@ export default obj => {
 
   if (body) {
     switch (obj.actionType) {
+      // *** 1. Terminal Commands ***
       case "LK":
-        // Nothing to parse
+        payload = parseLK(body);
+        break;
+      case "UD":
+        payload = parseUD(body);
+        break;
+      case "UD2":
+        payload = parseUD2(body);
+        break;
+      case "AL":
+        payload = parseAL(body);
+        break;
+      case "WAD":
+        payload = parseWAD(body);
+        break;
+      case "WG":
+        payload = parseWG(body);
+        break;
+
+      // *** 2. Server Commands ***
+      case "UPLOAD":
+        payload = parseUPLOAD(body);
         break;
       case "CENTER":
         payload = parseCENTER(body);
@@ -25,6 +46,16 @@ export default obj => {
       case "SMS":
         payload = parseSMS(body);
         break;
+      case "MONITOR":
+        // Nothing to parse
+        break;
+      case "SOS":
+      case "SOS1":
+      case "SOS2":
+      case "SOS3":
+        payload = parseSOS(body, header.actionType);
+        break;
+
       case "UPGRADE":
         payload = parseUPGRADE(body);
         break;
@@ -32,30 +63,56 @@ export default obj => {
         payload = parseIP(body);
         break;
       case "FACTORY":
+        // Nothing to parse
         break;
       case "LZ":
         payload = parseLZ(body);
         break;
-      case "UD":
-        payload = parseUD(body);
+      case "URL":
+        payload = parseURL(body);
         break;
-      case "UD2":
-        payload = parseUD2(body);
+      case "SOSSMS":
+        payload = parseSOSSMS(body);
         break;
-      case "AL":
-        payload = parseAL(body);
+      case "LOWBAT":
+        payload = parseLOWBAT(body);
         break;
-      case "UPLOAD":
-        payload = parseUPLOAD(body);
+      case "APN":
+        payload = parseAPN(body);
         break;
-      case "MONITOR":
+      case "ANY":
+        payload = parseANY(body);
+        break;
+      case "TS":
+        // payload = parseTS(body);
+        break;
+      case "VERNO":
         // Nothing to parse
         break;
-      case "WAD":
-        payload = parseWAD(body);
+      case "RESET":
+        // Nothing to parse
         break;
-      case "WG":
-        payload = parseWG(body);
+      case "CR":
+        // Nothing to parse
+        break;
+      case "BT":
+        payload = parseBT(body);
+        break;
+      case "WORK":
+        payload = parseWORK(body);
+        break;
+      case "WORKTIME":
+        payload = parseWORKTIME(body);
+        break;
+      case "REMOVE":
+        payload = parseREMOVE(body);
+        break;
+      case "PULSE":
+        // payload = parsePULSE(body);
+        break;
+
+      default:
+        payload = { error: "Action type unsupported" };
         break;
     }
   }
@@ -87,7 +144,6 @@ const parseLocationData = body => {
     time = "";
 
   tabDate.forEach(element => {
-    //console.log(element);
     date += element.toString().padStart(2, "0");
   });
 
@@ -109,17 +165,18 @@ const parseLocationData = body => {
 const parseUD = body => parseLocationData(body);
 const parseUD2 = body => parseLocationData(body);
 const parseAL = body => parseLocationData(body);
-const parseWG = body => parseLocationData(body);
-
-const parseUPLOAD = body => {
-  return `${body.interval}`;
-};
 
 const parseWAD = body => {
   return `${body.language},` + parseLocationData(body);
 };
 
-// **** 2. SEND COMMANDS ON PLATFORM ***** //
+const parseWG = body => parseLocationData(body);
+
+// *** 2. Server Commands ***
+
+const parseUPLOAD = body => {
+  return `${body.interval}`;
+};
 
 const parseCENTER = body => {
   return `${body.centerNumber}`;
@@ -141,6 +198,19 @@ const parseSMS = body => {
   return `${body.phoneNumber},${message}`;
 };
 
+const parseSOS = (body, SOSNumber) => {
+  let id = parseInt(SOSNumber[SOSNumber.length - 1]);
+  let p = "phoneNumber";
+
+  if (!isNaN(id)) return `${body[p + id]}`;
+  else {
+    let result = "";
+    for (var i = 1; i < 4; ++i) result += `${body[p + i]},`;
+    result = result.slice(0, -1);
+    return result;
+  }
+};
+
 const parseUPGRADE = body => {
   return `${body.URL}`;
 };
@@ -150,23 +220,54 @@ const parseIP = body => {
 };
 
 const parseLZ = body => {
-  return `${body.language},${timeArea}`;
+  return `${body.language},${body.timeArea}`;
 };
 
-// const expectedWG = {
-//   vendor: "SG",
-//   watchId: "8800000015",
-//   length: parseInt("87", 16),
-//   actionType: "WG",
-//   payload: {
-//     date: new Date("04/22/2014 13:46:52"), // mm/dd/yyyy hh:mm:ss
-//     latitude: 22.571707,
-//     longitude: 113.8613968
-//   }
-// };
+const parseURL = body => {
+  return {
+    // URL Google Query
+  };
+};
 
-// const packetWG =
-//   "[SG*8800000015*0087*WG,220414,134652,A,22.571707,N,113.8613968,E,0.1,0.0,100,7,60,90,1000,50,0001,4,1,460,0,9360,4082,131,9360,4092,148,9360,4091,143,9360,4153,141]";
+const parseSOSSMS = body => {
+  return `${body.sendEmergencySMS}`;
+};
 
-// console.log(packetWG);
-// console.log(a(expectedWG));
+const parseLOWBAT = body => {
+  return `${body.sendBatteryLowSMSOn}`;
+};
+
+const parseAPN = body => {
+  return `
+    ${body.APNName},
+    ${body.userName},
+    ${body.code},
+    ${body.userData}
+  `;
+};
+
+const parseANY = body => {
+  return `${body.SMSControlAccessOn}`;
+};
+
+const parseTS = body => {
+  return {
+    // Parameter Query
+  };
+};
+
+const parseBT = body => {
+  return `${body.bluetoothOn}`;
+};
+
+const parseWORK = body => {
+  return `${body.workingTimeArea}`;
+};
+
+const parseWORKTIME = body => {
+  return `${body.workingTime}`;
+};
+
+const parseREMOVE = body => {
+  return `${body.alarmOn}`;
+};
