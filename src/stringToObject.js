@@ -398,3 +398,9 @@ const parseREMOVE = body => {
     alarmOn: body[0]
   };
 };
+
+const parsePULSE = body => {
+  return {
+    pulseBeatingNumber: parseInt(body[0])
+  };
+};

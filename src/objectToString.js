@@ -108,7 +108,7 @@ export default obj => {
         payload = parseREMOVE(body);
         break;
       case "PULSE":
-        // payload = parsePULSE(body);
+        payload = parsePULSE(body);
         break;
 
       default:
@@ -270,4 +270,8 @@ const parseWORKTIME = body => {
 
 const parseREMOVE = body => {
   return `${body.alarmOn}`;
+};
+
+const parsePULSE = body => {
+  return `${body.pulseBeatingNumber}`;
 };
