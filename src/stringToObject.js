@@ -7,112 +7,69 @@ export default str => {
   let body = arr.slice(1, arr.length);
   let payload = {};
 
-  if (body) {
-    switch (header.actionType) {
-      // *** 1. Terminal Commands ***
-      case "LK":
-        payload = parseLK(body); // In case of filled body
-        break;
-      case "UD":
-        payload = parseUD(body);
-        break;
-      case "UD2":
-        payload = parseUD2(body);
-        break;
-      case "AL":
-        payload = parseAL(body);
-        break;
-      case "WAD":
-        payload = parseWAD(body);
-        break;
-      case "WG":
-        payload = parseWG(body);
-        break;
-
-      // *** 2. Server Commands ***
-      case "UPLOAD":
-        payload = parseUPLOAD(body);
-        break;
-      case "CENTER":
-        payload = parseCENTER(body);
-        break;
-      case "SLAVE":
-        payload = parseSLAVE(body);
-        break;
-      case "PW":
-        payload = parsePW(body);
-        break;
-      case "CALL":
-        payload = parseCALL(body);
-        break;
-      case "SMS":
-        payload = parseSMS(body);
-        break;
-      case "MONITOR":
-        break;
-      case "SOS":
-      case "SOS1":
-      case "SOS2":
-      case "SOS3":
-        payload = parseSOS(body, header.actionType);
-        break;
-
-      case "UPGRADE":
-        payload = parseUPGRADE(body);
-        break;
-      case "IP":
-        payload = parseIP(body);
-        break;
-      case "FACTORY":
-        break;
-      case "LZ":
-        payload = parseLZ(body);
-        break;
-      case "URL":
-        payload = parseURL(body);
-        break;
-      case "SOSSMS":
-        payload = parseSOSSMS(body);
-        break;
-      case "LOWBAT":
-        payload = parseLOWBAT(body);
-        break;
-      case "APN":
-        payload = parseAPN(body);
-        break;
-      case "ANY":
-        payload = parseANY(body);
-        break;
-      case "TS":
-        payload = parseTS(body);
-        break;
-      case "VERNO":
-      case "RESET":
-      case "CR":
-        break;
-      case "BT":
-        payload = parseBT(body);
-        break;
-      case "WORK":
-        payload = parseWORK(body);
-        break;
-      case "WORKTIME":
-        payload = parseWORKTIME(body);
-        break;
-      case "REMOVE":
-        payload = parseREMOVE(body);
-        break;
-      case "PULSE":
-        payload = parsePULSE(body);
-        break;
-
-      default:
-        payload = { error: "Action type unsupported" };
-        break;
-    }
+  switch (header.actionType) {
+    case "LK":
+      payload = parseLK(body);
+      break;
+    case "UD":
+      payload = parseUD(body);
+      break;
+    case "UD2":
+      payload = parseUD2(body);
+      break;
+    case "AL":
+      payload = parseAL(body);
+      break;
+    case "WAD":
+      payload = parseWAD(body);
+      break;
+    case "WG":
+      payload = parseWG(body);
+      break;
+    case "URL":
+      payload = parseURL(body);
+      break;
+    case "TS":
+      payload = parseTS(body);
+      break;
+    case "VERNO":
+      payload = parseVERNO(body);
+      break;
+    case "PULSE":
+      payload = parsePULSE(body);
+      break;
+    case "ANY":
+    case "APN":
+    case "BT":
+    case "CALL":
+    case "CENTER":
+    case "CR":
+    case "FACTORY":
+    case "LOWBAT":
+    case "LZ":
+    case "MONITOR":
+    case "POWEROFF":
+    case "PW":
+    case "REMOVE":
+    case "RESET":
+    case "SLAVE":
+    case "SMS":
+    case "SOS":
+    case "SOSSMS":
+    case "SOS1":
+    case "SOS2":
+    case "SOS3":
+    case "UPGRADE":
+    case "UPLOAD":
+    case "WORK":
+    case "WORKTIME":
+      payload = {};
+      break;
+    default:
+      payload = { error: "Action type unsupported" };
+      break;
   }
 
-  // Return function
   return {
     ...header,
     payload
@@ -145,44 +102,42 @@ const _parseDateTime = (date, time) =>
 
 // Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
 const parseLocationData = body => {
-  const arr = body; //.slice(0, 7); // We only need the location data
+  const date = _parseDateTime(body[0], body[1]);
+  const local = body[2] === "A"; // Local or Not Local Time
 
-  const date = _parseDateTime(arr[0], arr[1]);
-  const local = arr[2] === "A"; // Local or Not Local Time
+  const latitude = parseFloat(body[3]) * (body[4] == "N" ? 1 : -1);
+  const longitude = parseFloat(body[5]) * (body[6] == "E" ? 1 : -1);
 
-  const latitude = parseFloat(arr[3]) * (arr[4] == "N" ? 1 : -1);
-  const longitude = parseFloat(arr[5]) * (arr[6] == "E" ? 1 : -1);
+  const speed = parseFloat(body[7]);
+  const direction = parseFloat(body[8]);
+  const altitude = parseFloat(body[9]);
 
-  const speed = parseFloat(arr[7]);
-  const direction = parseFloat(arr[8]);
-  const altitude = parseFloat(arr[9]);
+  const numberOfSatellites = parseInt(body[10]);
+  const GSMStrength = parseInt(body[11]);
+  const battery = parseInt(body[12]);
+  const pedometer = parseInt(body[13]);
+  const rollingTime = parseInt(body[14]);
+  const terminalState = body[15];
+  const baseStationsNumber = parseInt(body[16]);
+  const connectedToStation = parseInt(body[17]);
+  const MCCCountryCode = parseInt(body[18]);
+  const MNCNetworkCode = parseInt(body[19]);
 
-  const numberOfSatellites = parseInt(arr[10]);
-  const GSMStrength = parseInt(arr[11]);
-  const battery = parseInt(arr[12]);
-  const pedometer = parseInt(arr[13]);
-  const rollingTime = parseInt(arr[14]);
-  const terminalState = arr[15];
-  const baseStationsNumber = parseInt(arr[16]);
-  const connectedToStation = parseInt(arr[17]);
-  const MCCCountryCode = parseInt(arr[18]);
-  const MNCNetworkCode = parseInt(arr[19]);
+  const baseStationAreaCode = parseInt(body[20]);
+  const baseStationNumber = parseInt(body[21]);
+  const baseStationSignalStrength = parseInt(body[22]);
 
-  const baseStationAreaCode = parseInt(arr[20]);
-  const baseStationNumber = parseInt(arr[21]);
-  const baseStationSignalStrength = parseInt(arr[22]);
+  const baseStation1AreaCode = parseInt(body[23]);
+  const baseStation1Number = parseInt(body[24]);
+  const baseStation1SignalStrength = parseInt(body[25]);
 
-  const baseStation1AreaCode = parseInt(arr[23]);
-  const baseStation1Number = parseInt(arr[24]);
-  const baseStation1SignalStrength = parseInt(arr[25]);
+  const baseStation2AreaCode = parseInt(body[26]);
+  const baseStation2Number = parseInt(body[27]);
+  const baseStation2SignalStrength = parseInt(body[28]);
 
-  const baseStation2AreaCode = parseInt(arr[26]);
-  const baseStation2Number = parseInt(arr[27]);
-  const baseStation2SignalStrength = parseInt(arr[28]);
-
-  const baseStation3AreaCode = parseInt(arr[29]);
-  const baseStation3Number = parseInt(arr[30]);
-  const baseStation3SignalStrength = parseInt(arr[31]);
+  const baseStation3AreaCode = parseInt(body[29]);
+  const baseStation3Number = parseInt(body[30]);
+  const baseStation3SignalStrength = parseInt(body[31]);
 
   return {
     date,
@@ -223,9 +178,9 @@ const parseLocationData = body => {
   };
 };
 
-// *** 1. Terminal Commands ***
-
 const parseLK = body => {
+  if (body.length === 0) return {};
+
   const steps = parseInt(body[0]);
   const rollingTime = parseInt(body[1]);
   const batteryAmount = parseInt(body[2]);
@@ -238,8 +193,53 @@ const parseLK = body => {
 };
 
 const parseUD = body => parseLocationData(body);
-const parseUD2 = body => parseLocationData(body);
 const parseAL = body => parseLocationData(body);
+
+const parseUD2 = body => {
+  const date = _parseDateTime(body[0], body[1]);
+  const local = body[2] === "A";
+
+  const latitude = parseFloat(body[3]) * (body[4] == "N" ? 1 : -1);
+  const longitude = parseFloat(body[5]) * (body[6] == "E" ? 1 : -1);
+
+  const speed = parseFloat(body[7]);
+  const direction = parseFloat(body[8]);
+  const altitude = parseFloat(body[9]);
+
+  const numberOfSatellites = parseInt(body[10]);
+  const GSMStrength = parseInt(body[11]);
+  const battery = parseInt(body[12]);
+  const pedometer = parseInt(body[13]);
+  const rollingTime = parseInt(body[14]);
+  const terminalState = body[15];
+  const baseStationsNumber = parseInt(body[16]);
+  const connectedToStation = parseInt(body[17]);
+  const MCCCountryCode = parseInt(body[18]);
+  const MNCNetworkCode = parseInt(body[19]);
+
+  return {
+    date,
+    local,
+
+    latitude,
+    longitude,
+
+    speed,
+    direction,
+    altitude,
+
+    numberOfSatellites,
+    GSMStrength,
+    battery,
+    pedometer,
+    rollingTime,
+    terminalState,
+    baseStationsNumber,
+    connectedToStation,
+    MCCCountryCode,
+    MNCNetworkCode
+  };
+};
 
 const parseWAD = body => {
   const language = body[0];
@@ -251,167 +251,36 @@ const parseWAD = body => {
   };
 };
 
-const parseWG = body => {
-  const locationData = parseLocationData(body);
+const parseWG = body => parseLocationData(body);
 
-  return {
-    ...locationData
-  };
-};
+const parseURL = body => ({
+  url: body[0]
+});
 
-// *** 2. Server Commands ***
-const parseUPLOAD = body => {
-  const interval = parseInt(body[0]);
-  return {
-    interval
-  };
-};
+const parseTS = body => ({
+  softwareDevice: body[0],
+  IDDevice: body[1],
+  IMEI: body[2],
+  IP: body[3],
+  port: body[4],
+  centerNumber: body[5],
+  assistanceNumber: body[6],
+  SOS1: body[7],
+  SOS2: body[8],
+  SOS3: body[9],
+  reportingIntervals: body[10],
+  batteryAmount: body[11],
+  language: body[12],
+  timeArea: body[13],
+  satelliteNumber: body[14],
+  GSMSignalStrength: body[15],
+  LED: body[16],
+  switch: body[17],
+  code: body[18]
+});
 
-const parseCENTER = body => {
-  return {
-    centerNumber: body[0]
-  };
-};
+const parseVERNO = body => ({
+  versionNumber: body[0]
+});
 
-const parseSLAVE = body => {
-  return {
-    assistanceNumber: body[0]
-  };
-};
-
-const parsePW = body => {
-  return {
-    password: body[0]
-  };
-};
-
-const parseCALL = body => {
-  return {
-    phoneNumber: body[0]
-  };
-};
-
-const parseSMS = body => {
-  return {
-    phoneNumber: body[0],
-    message: body[1]
-  };
-};
-
-const parseSOS = (body, SOSNumber) => {
-  let result = {},
-    phoneNumber = "phoneNumber";
-
-  if (body.length == 3)
-    for (let i = 1; i < 4; ++i) result[phoneNumber + i] = body[i - 1];
-  else result[phoneNumber + SOSNumber[SOSNumber.length - 1]] = body[0];
-
-  return result;
-};
-
-const parseUPGRADE = body => {
-  return {
-    URL: body[0]
-  };
-};
-
-const parseIP = body => {
-  return {
-    IP: body[0],
-    port: parseInt(body[1])
-  };
-};
-
-const parseLZ = body => {
-  return {
-    language: body[0],
-    timeArea: body[1]
-  };
-};
-
-const parseURL = body => {
-  return {
-    url: body
-  };
-};
-
-const parseSOSSMS = body => {
-  return {
-    sendEmergencySMS: body[0]
-  };
-};
-
-const parseLOWBAT = body => {
-  return {
-    sendBatteryLowSMSOn: body[0]
-  };
-};
-
-const parseAPN = body => {
-  return {
-    APNName: body[0],
-    userName: body[1],
-    code: body[2],
-    userData: body[3]
-  };
-};
-
-const parseANY = body => {
-  return {
-    SMSControlAccessOn: body[0]
-  };
-};
-
-const parseTS = body => {
-  return {
-    softwareDevice: body[0],
-    IDDevice: body[1],
-    IMEI: body[2],
-    IP: body[3],
-    port: body[4],
-    centerNumber: body[5],
-    assistanceNumber: body[6],
-    SOS1: body[7],
-    SOS2: body[8],
-    SOS3: body[9],
-    reportingIntervals: body[10],
-    batteryAmount: body[11],
-    language: body[12],
-    timeArea: body[13],
-    satelliteNumber: body[14],
-    GSMSignalStrength: body[15],
-    LED: body[16],
-    switch: body[17],
-    code: body[18]
-  };
-};
-
-const parseBT = body => {
-  return {
-    bluetoothOn: body[0]
-  };
-};
-
-const parseWORK = body => {
-  return {
-    workingTimeArea: body
-  };
-};
-
-const parseWORKTIME = body => {
-  return {
-    workingTime: body[0]
-  };
-};
-
-const parseREMOVE = body => {
-  return {
-    alarmOn: body[0]
-  };
-};
-
-const parsePULSE = body => {
-  return {
-    pulseBeatingNumber: parseInt(body[0])
-  };
-};
+const parsePULSE = body => ({ pulseBeatingNumber: parseInt(body[0]) });
