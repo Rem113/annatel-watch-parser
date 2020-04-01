@@ -112,12 +112,12 @@ export default obj => {
     }
   }
 
-  calculateLenght(header, payload);
+  calculateLength(header, payload);
 
   return `[${header}` + (payload ? `,${payload}]` : "]");
 };
 
-const calculateLenght = (header, payload) => {
+const calculateLength = (header, payload) => {
   header.length = (
     header.actionType.length + (payload.length ? payload.length + 1 : 0)
   )
