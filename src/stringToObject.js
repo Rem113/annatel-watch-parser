@@ -1,7 +1,7 @@
 export default str => {
   // Parse header
   const arr = str.substr(1, str.length - 2).split(","); // Get rid of leading and trailing angle brackets
-  const header = parseHeader(arr[0]);
+  const header = _parseHeader(arr[0]);
 
   // Parse body
   let body = arr.slice(1, arr.length);
@@ -9,34 +9,34 @@ export default str => {
 
   switch (header.actionType) {
     case "LK":
-      payload = parseLK(body);
+      payload = _parseLK(body);
       break;
     case "UD":
-      payload = parseUD(body);
+      payload = _parseUD(body);
       break;
     case "UD2":
-      payload = parseUD2(body);
+      payload = _parseUD2(body);
       break;
     case "AL":
-      payload = parseAL(body);
+      payload = _parseAL(body);
       break;
     case "WAD":
-      payload = parseWAD(body);
+      payload = _parseWAD(body);
       break;
     case "WG":
-      payload = parseWG(body);
+      payload = _parseWG(body);
       break;
     case "URL":
-      payload = parseURL(body);
+      payload = _parseURL(body);
       break;
     case "TS":
-      payload = parseTS(body);
+      payload = _parseTS(body);
       break;
     case "VERNO":
-      payload = parseVERNO(body);
+      payload = _parseVERNO(body);
       break;
     case "PULSE":
-      payload = parsePULSE(body);
+      payload = _parsePULSE(body);
       break;
     case "ANY":
     case "APN":
@@ -77,7 +77,7 @@ export default str => {
 };
 
 // Header format: vendor*id*length*action
-const parseHeader = header => {
+const _parseHeader = header => {
   const arr = header.split("*");
 
   return {
@@ -101,7 +101,7 @@ const _parseDateTime = (date, time) =>
   );
 
 // Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
-const parseLocationData = body => {
+const _parseLocationData = body => {
   const date = _parseDateTime(body[0], body[1]);
   const local = body[2] === "A"; // Local or Not Local Time
 
@@ -123,21 +123,9 @@ const parseLocationData = body => {
   const MCCCountryCode = parseInt(body[18]);
   const MNCNetworkCode = parseInt(body[19]);
 
-  const baseStationAreaCode = parseInt(body[20]);
-  const baseStationNumber = parseInt(body[21]);
-  const baseStationSignalStrength = parseInt(body[22]);
+  let baseStationData = {};
 
-  const baseStation1AreaCode = parseInt(body[23]);
-  const baseStation1Number = parseInt(body[24]);
-  const baseStation1SignalStrength = parseInt(body[25]);
-
-  const baseStation2AreaCode = parseInt(body[26]);
-  const baseStation2Number = parseInt(body[27]);
-  const baseStation2SignalStrength = parseInt(body[28]);
-
-  const baseStation3AreaCode = parseInt(body[29]);
-  const baseStation3Number = parseInt(body[30]);
-  const baseStation3SignalStrength = parseInt(body[31]);
+  if (body.length > 20) baseStationData = _parseBaseStationData(body);
 
   return {
     date,
@@ -160,25 +148,29 @@ const parseLocationData = body => {
     MCCCountryCode,
     MNCNetworkCode,
 
-    baseStationAreaCode,
-    baseStationNumber,
-    baseStationSignalStrength,
-
-    baseStation1AreaCode,
-    baseStation1Number,
-    baseStation1SignalStrength,
-
-    baseStation2AreaCode,
-    baseStation2Number,
-    baseStation2SignalStrength,
-
-    baseStation3AreaCode,
-    baseStation3Number,
-    baseStation3SignalStrength
+    ...baseStationData
   };
 };
 
-const parseLK = body => {
+const _parseBaseStationData = body => ({
+  baseStationAreaCode: parseInt(body[20]),
+  baseStationNumber: parseInt(body[21]),
+  baseStationSignalStrength: parseInt(body[22]),
+
+  baseStation1AreaCode: parseInt(body[23]),
+  baseStation1Number: parseInt(body[24]),
+  baseStation1SignalStrength: parseInt(body[25]),
+
+  baseStation2AreaCode: parseInt(body[26]),
+  baseStation2Number: parseInt(body[27]),
+  baseStation2SignalStrength: parseInt(body[28]),
+
+  baseStation3AreaCode: parseInt(body[29]),
+  baseStation3Number: parseInt(body[30]),
+  baseStation3SignalStrength: parseInt(body[31])
+});
+
+const _parseLK = body => {
   if (body.length === 0) return {};
 
   const steps = parseInt(body[0]);
@@ -192,72 +184,21 @@ const parseLK = body => {
   };
 };
 
-const parseUD = body => parseLocationData(body);
-const parseAL = body => parseLocationData(body);
+const _parseUD = body => _parseLocationData(body);
+const _parseAL = body => _parseLocationData(body);
+const _parseUD2 = body => _parseLocationData(body);
+const _parseWG = body => _parseLocationData(body);
 
-const parseUD2 = body => {
-  const date = _parseDateTime(body[0], body[1]);
-  const local = body[2] === "A";
+const _parseWAD = body => ({
+  language: body[0],
+  ..._parseLocationData(body.slice(1, body.length))
+});
 
-  const latitude = parseFloat(body[3]) * (body[4] == "N" ? 1 : -1);
-  const longitude = parseFloat(body[5]) * (body[6] == "E" ? 1 : -1);
-
-  const speed = parseFloat(body[7]);
-  const direction = parseFloat(body[8]);
-  const altitude = parseFloat(body[9]);
-
-  const numberOfSatellites = parseInt(body[10]);
-  const GSMStrength = parseInt(body[11]);
-  const battery = parseInt(body[12]);
-  const pedometer = parseInt(body[13]);
-  const rollingTime = parseInt(body[14]);
-  const terminalState = body[15];
-  const baseStationsNumber = parseInt(body[16]);
-  const connectedToStation = parseInt(body[17]);
-  const MCCCountryCode = parseInt(body[18]);
-  const MNCNetworkCode = parseInt(body[19]);
-
-  return {
-    date,
-    local,
-
-    latitude,
-    longitude,
-
-    speed,
-    direction,
-    altitude,
-
-    numberOfSatellites,
-    GSMStrength,
-    battery,
-    pedometer,
-    rollingTime,
-    terminalState,
-    baseStationsNumber,
-    connectedToStation,
-    MCCCountryCode,
-    MNCNetworkCode
-  };
-};
-
-const parseWAD = body => {
-  const language = body[0];
-  const locationData = parseLocationData(body.slice(1, body.length));
-
-  return {
-    language,
-    ...locationData
-  };
-};
-
-const parseWG = body => parseLocationData(body);
-
-const parseURL = body => ({
+const _parseURL = body => ({
   url: body[0]
 });
 
-const parseTS = body => ({
+const _parseTS = body => ({
   softwareDevice: body[0],
   IDDevice: body[1],
   IMEI: body[2],
@@ -279,8 +220,8 @@ const parseTS = body => ({
   code: body[18]
 });
 
-const parseVERNO = body => ({
+const _parseVERNO = body => ({
   versionNumber: body[0]
 });
 
-const parsePULSE = body => ({ pulseBeatingNumber: parseInt(body[0]) });
+const _parsePULSE = body => ({ pulseBeatingNumber: parseInt(body[0]) });
