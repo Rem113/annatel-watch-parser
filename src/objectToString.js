@@ -1,5 +1,4 @@
 export default obj => {
-  //function a(obj) {
   const header = parseHeader(obj);
 
   const body = obj.payload;
@@ -63,7 +62,6 @@ export default obj => {
         payload = parseIP(body);
         break;
       case "FACTORY":
-        // Nothing to parse
         break;
       case "LZ":
         payload = parseLZ(body);
@@ -84,17 +82,14 @@ export default obj => {
         payload = parseANY(body);
         break;
       case "TS":
-        // payload = parseTS(body);
+        payload = parseTS(body);
         break;
+
       case "VERNO":
-        // Nothing to parse
-        break;
       case "RESET":
-        // Nothing to parse
-        break;
       case "CR":
-        // Nothing to parse
         break;
+
       case "BT":
         payload = parseBT(body);
         break;
@@ -117,14 +112,22 @@ export default obj => {
     }
   }
 
+  calculateLenght(header, payload);
+
   return `[${header}` + (payload ? `,${payload}]` : "]");
 };
 
-const parseHeader = obj => {
-  return `${obj.vendor}*${obj.watchId}*${obj.length
+const calculateLenght = (header, payload) => {
+  header.length = (
+    header.actionType.length + (payload.length ? payload.length + 1 : 0)
+  )
     .toString(16)
     .toUpperCase()
-    .padStart(4, "0")}*${obj.actionType}`;
+    .padStart(4, "0");
+};
+
+const parseHeader = obj => {
+  return `${obj.vendor}*${obj.watchId}*${obj.length}*${obj.actionType}`;
 };
 
 const parseLocationData = body => {
@@ -148,7 +151,6 @@ const parseLocationData = body => {
   });
 
   tabTime.forEach(element => {
-    //console.log(element);
     time += element.toString().padStart(2, "0");
   });
 
@@ -162,6 +164,10 @@ const parseLocationData = body => {
   return `${dateTime},${latitude},${longitude}`;
 };
 
+const parseLK = body => {
+  return `${steps},${rollingTime},${batteryAmount}`;
+};
+
 const parseUD = body => parseLocationData(body);
 const parseUD2 = body => parseLocationData(body);
 const parseAL = body => parseLocationData(body);
@@ -172,7 +178,7 @@ const parseWAD = body => {
 
 const parseWG = body => parseLocationData(body);
 
-// *** 2. Server Commands ***
+// *** 2. Server Commands *** //
 
 const parseUPLOAD = body => {
   return `${body.interval}`;
@@ -224,9 +230,7 @@ const parseLZ = body => {
 };
 
 const parseURL = body => {
-  return {
-    // URL Google Query
-  };
+  return `${url}`;
 };
 
 const parseSOSSMS = body => {
@@ -238,12 +242,7 @@ const parseLOWBAT = body => {
 };
 
 const parseAPN = body => {
-  return `
-    ${body.APNName},
-    ${body.userName},
-    ${body.code},
-    ${body.userData}
-  `;
+  return `${body.APNName},${body.userName},${body.code},${body.userData}`;
 };
 
 const parseANY = body => {
@@ -251,9 +250,25 @@ const parseANY = body => {
 };
 
 const parseTS = body => {
-  return {
-    // Parameter Query
-  };
+  return `${body.softwareDevice},
+    ${body.IDDevice},
+    ${body.IMEI},
+    ${body.IP},
+    ${body.port},
+    ${body.centerNumber},
+    ${body.assistanceNumber},
+    ${body.SOS1},
+    ${body.SOS2},
+    ${body.SOS3},
+    ${body.reportingIntervals},
+    ${body.batteryAmount},
+    ${body.language},
+    ${body.timeArea},
+    ${body.satelliteNumber},
+    ${body.GSMSignalStrength},
+    ${body.LED},
+    ${body.switch},
+    ${body.code}`;
 };
 
 const parseBT = body => {

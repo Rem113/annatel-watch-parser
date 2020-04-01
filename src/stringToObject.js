@@ -49,7 +49,6 @@ export default str => {
         payload = parseSMS(body);
         break;
       case "MONITOR":
-        // Nothing to parse
         break;
       case "SOS":
       case "SOS1":
@@ -65,7 +64,6 @@ export default str => {
         payload = parseIP(body);
         break;
       case "FACTORY":
-        // Nothing to parse
         break;
       case "LZ":
         payload = parseLZ(body);
@@ -86,16 +84,11 @@ export default str => {
         payload = parseANY(body);
         break;
       case "TS":
-        // payload = parseTS(body);
+        payload = parseTS(body);
         break;
       case "VERNO":
-        // Nothing to parse
-        break;
       case "RESET":
-        // Nothing to parse
-        break;
       case "CR":
-        // Nothing to parse
         break;
       case "BT":
         payload = parseBT(body);
@@ -110,7 +103,7 @@ export default str => {
         payload = parseREMOVE(body);
         break;
       case "PULSE":
-        // payload = parsePULSE(body);
+        payload = parsePULSE(body);
         break;
 
       default:
@@ -338,7 +331,7 @@ const parseLZ = body => {
 
 const parseURL = body => {
   return {
-    // URL Google Query
+    url: body
   };
 };
 
@@ -371,7 +364,25 @@ const parseANY = body => {
 
 const parseTS = body => {
   return {
-    // Parameter Query
+    softwareDevice: body[0],
+    IDDevice: body[1],
+    IMEI: body[2],
+    IP: body[3],
+    port: body[4],
+    centerNumber: body[5],
+    assistanceNumber: body[6],
+    SOS1: body[7],
+    SOS2: body[8],
+    SOS3: body[9],
+    reportingIntervals: body[10],
+    batteryAmount: body[11],
+    language: body[12],
+    timeArea: body[13],
+    satelliteNumber: body[14],
+    GSMSignalStrength: body[15],
+    LED: body[16],
+    switch: body[17],
+    code: body[18]
   };
 };
 
