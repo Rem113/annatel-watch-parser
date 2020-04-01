@@ -1,4 +1,4 @@
-import { stringToObject, objectToString } from "../index";
+import { deserialize } from "../index";
 
 const packetLK = "[SG*8800000015*0002*LK]";
 const packetLKE = "[SG*8800000015*000D*LK,50,100,100]";
@@ -97,7 +97,19 @@ it("should parse the watch packets correctly", () => {
       pedometer: 1000,
       rollingTime: 50,
       speed: 0.1,
-      terminalState: "0000"
+      terminalState: "0000",
+      baseStation1AreaCode: 9360,
+      baseStation1Number: 4092,
+      baseStation1SignalStrength: 148,
+      baseStation2AreaCode: 9360,
+      baseStation2Number: 4091,
+      baseStation2SignalStrength: 143,
+      baseStation3AreaCode: 9360,
+      baseStation3Number: 4153,
+      baseStation3SignalStrength: 141,
+      baseStationAreaCode: 9360,
+      baseStationNumber: 4082,
+      baseStationSignalStrength: 131
     }
   };
 
@@ -232,13 +244,13 @@ it("should parse the watch packets correctly", () => {
     }
   };
 
-  expect(stringToObject(packetLK)).toEqual(expectedLK);
-  expect(stringToObject(packetLKE)).toEqual(expectedLKE);
-  expect(stringToObject(packetUD)).toEqual(expectedUD);
-  expect(stringToObject(packetUD2)).toEqual(expectedUD2);
-  expect(stringToObject(packetAL)).toEqual(expectedAL);
-  expect(stringToObject(packetUPLOAD)).toEqual(expectedUPLOAD);
-  expect(stringToObject(packetMONITOR)).toEqual(expectedMONITOR);
-  expect(stringToObject(packetWAD)).toEqual(expectedWAD);
-  expect(stringToObject(packetWG)).toEqual(expectedWG);
+  expect(deserialize(packetLK)).toEqual(expectedLK);
+  expect(deserialize(packetLKE)).toEqual(expectedLKE);
+  expect(deserialize(packetUD)).toEqual(expectedUD);
+  expect(deserialize(packetUD2)).toEqual(expectedUD2);
+  expect(deserialize(packetAL)).toEqual(expectedAL);
+  expect(deserialize(packetUPLOAD)).toEqual(expectedUPLOAD);
+  expect(deserialize(packetMONITOR)).toEqual(expectedMONITOR);
+  expect(deserialize(packetWAD)).toEqual(expectedWAD);
+  expect(deserialize(packetWG)).toEqual(expectedWG);
 });

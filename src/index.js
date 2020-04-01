@@ -1,7 +1,7 @@
-import stringToObject from "./stringToObject";
-import objectToString from "./objectToString";
+import deserialize from "./deserialize";
+import serialize from "./serialize";
 
 export default {
-  stringToObject,
-  objectToString
+  deserialize,
+  serialize
 };
