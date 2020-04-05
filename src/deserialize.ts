@@ -1,4 +1,4 @@
-export default str => {
+export default (str) => {
   // Parse header
   const arr = str.substr(1, str.length - 2).split(","); // Get rid of leading and trailing angle brackets
   const header = _parseHeader(arr[0]);
@@ -72,19 +72,19 @@ export default str => {
 
   return {
     ...header,
-    payload
+    payload,
   };
 };
 
 // Header format: vendor*id*length*action
-const _parseHeader = header => {
+const _parseHeader = (header) => {
   const arr = header.split("*");
 
   return {
     vendor: arr[0],
     watchId: arr[1],
     length: parseInt(arr[2], 16),
-    actionType: arr[3]
+    actionType: arr[3],
   };
 };
 
@@ -101,7 +101,7 @@ const _parseDateTime = (date, time) =>
   );
 
 // Body format: date, time, local, latitude, latitudeSymbol, longitude, longitudeSymbol, ...
-const _parseLocationData = body => {
+const _parseLocationData = (body) => {
   const date = _parseDateTime(body[0], body[1]);
   const local = body[2] === "A"; // Local or Not Local Time
 
@@ -148,11 +148,11 @@ const _parseLocationData = body => {
     MCCCountryCode,
     MNCNetworkCode,
 
-    ...baseStationData
+    ...baseStationData,
   };
 };
 
-const _parseBaseStationData = body => ({
+const _parseBaseStationData = (body) => ({
   baseStationAreaCode: parseInt(body[20]),
   baseStationNumber: parseInt(body[21]),
   baseStationSignalStrength: parseInt(body[22]),
@@ -167,10 +167,10 @@ const _parseBaseStationData = body => ({
 
   baseStation3AreaCode: parseInt(body[29]),
   baseStation3Number: parseInt(body[30]),
-  baseStation3SignalStrength: parseInt(body[31])
+  baseStation3SignalStrength: parseInt(body[31]),
 });
 
-const _parseLK = body => {
+const _parseLK = (body) => {
   if (body.length === 0) return {};
 
   const steps = parseInt(body[0]);
@@ -180,25 +180,25 @@ const _parseLK = body => {
   return {
     steps,
     rollingTime,
-    batteryAmount
+    batteryAmount,
   };
 };
 
-const _parseUD = body => _parseLocationData(body);
-const _parseAL = body => _parseLocationData(body);
-const _parseUD2 = body => _parseLocationData(body);
-const _parseWG = body => _parseLocationData(body);
+const _parseUD = (body) => _parseLocationData(body);
+const _parseAL = (body) => _parseLocationData(body);
+const _parseUD2 = (body) => _parseLocationData(body);
+const _parseWG = (body) => _parseLocationData(body);
 
-const _parseWAD = body => ({
+const _parseWAD = (body) => ({
   language: body[0],
-  ..._parseLocationData(body.slice(1, body.length))
+  ..._parseLocationData(body.slice(1, body.length)),
 });
 
-const _parseURL = body => ({
-  url: body[0]
+const _parseURL = (body) => ({
+  url: body[0],
 });
 
-const _parseTS = body => ({
+const _parseTS = (body) => ({
   softwareDevice: body[0],
   IDDevice: body[1],
   IMEI: body[2],
@@ -217,11 +217,11 @@ const _parseTS = body => ({
   GSMSignalStrength: body[15],
   LED: body[16],
   switch: body[17],
-  code: body[18]
+  code: body[18],
 });
 
-const _parseVERNO = body => ({
-  versionNumber: body[0]
+const _parseVERNO = (body) => ({
+  versionNumber: body[0],
 });
 
-const _parsePULSE = body => ({ pulseBeatingNumber: parseInt(body[0]) });
+const _parsePULSE = (body) => ({ pulseBeatingNumber: parseInt(body[0]) });

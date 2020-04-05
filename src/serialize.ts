@@ -1,7 +1,7 @@
-export default obj => {
+export default (obj) => {
   const body = obj.payload;
 
-  let payload;
+  let payload: string | null;
 
   switch (obj.actionType) {
     case "AL":
@@ -95,36 +95,33 @@ export default obj => {
   return `[${header}` + (payload ? `,${payload}]` : "]");
 };
 
-const _calculateLength = (actionType, payload) => {
-  if (payload) return actionType.length + payload.length + 1;
+const _calculateLength = (actionType: string, payload: string | null) => {
+  if (payload !== null) return actionType.length + payload.length + 1;
   return actionType.length;
 };
 
-const _parseHeader = obj => {
-  const length = obj.length
-    .toString(16)
-    .toUpperCase()
-    .padStart(4, "0");
+const _parseHeader = (obj) => {
+  const length = obj.length.toString(16).toUpperCase().padStart(4, "0");
 
   return `${obj.vendor}*${obj.watchId}*${length}*${obj.actionType}`;
 };
 
-const _parseDateTime = body => {
+const _parseDateTime = (body) => {
   let dateTime = body.date;
 
   let tabDate = [
     dateTime.getDate(),
     dateTime.getMonth() + 1,
-    dateTime.getYear() % 100
+    dateTime.getYear() % 100,
   ];
   let tabTime = [
     dateTime.getHours(),
     dateTime.getMinutes(),
-    dateTime.getSeconds()
+    dateTime.getSeconds(),
   ];
 
-  const date = tabDate.map(e => e.toString().padStart(2, "0")).join("");
-  const time = tabTime.map(e => e.toString().padStart(2, "0")).join("");
+  const date = tabDate.map((e) => e.toString().padStart(2, "0")).join("");
+  const time = tabTime.map((e) => e.toString().padStart(2, "0")).join("");
 
   let local = "";
   if (body.local) local = ",A";
@@ -132,7 +129,7 @@ const _parseDateTime = body => {
   dateTime = `${date},${time + local}`;
 };
 
-const _parseLocationData = body => {
+const _parseLocationData = (body) => {
   let latitude = body.latitude;
   latitude = `${latitude},` + (latitude > 0 ? "N" : "S");
   let longitude = body.longitude;
@@ -141,27 +138,28 @@ const _parseLocationData = body => {
   return `${latitude},${longitude}`;
 };
 
-const _parseWAD = body =>
+const _parseWAD = (body) =>
   `${body.language},${_parseDateTime(body)},${_parseLocationData(body)}`;
-const _parseWG = body => _parseLocationData(body);
-const _parseUPLOAD = body => `${body.interval}`;
-const _parseCENTER = body => `${body.centerNumber}`;
-const _parseSLAVE = body => `${body.assistanceNumber}`;
-const _parsePW = body => `${body.password}`;
-const _parseCALL = body => `${body.phoneNumber}`;
-const _parseSMS = body => `${body.phoneNumber},${body.message}`;
-const _parseSOSNumbered = body => `${body.phoneNumber}`;
-const _parseSOS = body =>
+const _parseWG = (body) => _parseLocationData(body);
+const _parseUPLOAD = (body) => `${body.interval}`;
+const _parseCENTER = (body) => `${body.centerNumber}`;
+const _parseSLAVE = (body) => `${body.assistanceNumber}`;
+const _parsePW = (body) => `${body.password}`;
+const _parseCALL = (body) => `${body.phoneNumber}`;
+const _parseSMS = (body) => `${body.phoneNumber},${body.message}`;
+const _parseSOSNumbered = (body) => `${body.phoneNumber}`;
+const _parseSOS = (body) =>
   `${body.smsNumberOne},${body.smsNumberTwo},${body.smsNumberThree}`;
-const _parseUPGRADE = body => `${body.url}`;
-const _parseIP = body => `${body.ip},${body.port}`;
-const _parseLZ = body => `${body.language},${body.timeArea}`;
-const _parseSOSSMS = body => `${body.sendSmsWhenSos}`;
-const _parseLOWBAT = body => `${body.sendSmsLowBattery}`;
-const _parseAPN = body =>
+const _parseUPGRADE = (body) => `${body.url}`;
+const _parseIP = (body) => `${body.ip},${body.port}`;
+const _parseLZ = (body) => `${body.language},${body.timeArea}`;
+const _parseSOSSMS = (body) => `${body.sendSmsWhenSos}`;
+const _parseLOWBAT = (body) => `${body.sendSmsLowBattery}`;
+const _parseAPN = (body) =>
   `${body.apnName},${body.username},${body.code},${body.userData}`;
-const _parseANY = body => `${body.smsControlAccess}`;
-const _parseBT = body => `${body.bluetooth}`;
-const _parseWORK = body => body.work.map(e => `${e.start}-${e.end}`).join(",");
-const _parseWORKTIME = body => `${body.workingTime}`;
-const _parseREMOVE = body => `${body.removeAlarm}`;
+const _parseANY = (body) => `${body.smsControlAccess}`;
+const _parseBT = (body) => `${body.bluetooth}`;
+const _parseWORK = (body) =>
+  body.work.map((e) => `${e.start}-${e.end}`).join(",");
+const _parseWORKTIME = (body) => `${body.workingTime}`;
+const _parseREMOVE = (body) => `${body.removeAlarm}`;
